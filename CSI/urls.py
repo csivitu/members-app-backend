@@ -8,10 +8,5 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('apiserv.url')),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #remove in production
 
-# Remove in production
-if True:
-    urlpatterns.append(
-        static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    )

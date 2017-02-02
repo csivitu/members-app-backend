@@ -27,7 +27,7 @@ def cert_gen(name,regno,year):
 	font_SM = ImageFont.truetype(settings.BASE_DIR+"/cert/font.ttf", 64)
 	draw.text((1400, 905),name,(0,0,0),font=font)
 	draw.text((2800, 930),regno,(0,0,0),font=font_SM)
-	draw.text((500, 1040),of,(0,0,0),font=font)
+	draw.text((500, 1040),school,(0,0,0),font=font)
 	draw.text((3028, 1060),year,(0,0,0),font=font_SM)
 	return img
 
