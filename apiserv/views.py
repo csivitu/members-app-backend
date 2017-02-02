@@ -1,15 +1,27 @@
 from django.shortcuts import render
 from django.conf import settings
-import ujson,hashlib,jwt,datetime
+import ujson,datetime
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from apiserv.models import *
-from apiserv.serializers import EventSerializer
-from apiserv.serializers import EventCompSerializer
-from django.contrib.auth.models import User
+from apiserv.serializers import *
 from rest_framework.decorators import authentication_classes, permission_classes
 import traceback
+from apiserv.cert_gen import cert_gen
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth import get_user_model
+
+
+
+User = get_user_model()
+
+@api_view(['GET'])
+def generate_certificate(request):
+    image=cert_gen(request.user.name,request.user.username,request.user.date_joined.year)
+    response = HttpResponse(content_type="image/jpeg")
+    image.save(response, "JPEG")
+    return response
 
 @api_view(['GET'])
 def EventReq(request):
@@ -18,6 +30,12 @@ def EventReq(request):
         serializer = EventSerializer(events, many=True)
         return Response(serializer.data)
 
+@api_view(['GET'])
+def UserDetails(request):
+    if request.method == 'GET':
+        u = User.objects.get(username=request.user)
+        serializer = UserDetailsSerializer(u)
+        return Response(serializer.data)
 
 @api_view(['POST'])
 @authentication_classes([])
@@ -25,17 +43,13 @@ def EventReq(request):
 def register(request):
     try:
         jdata=ujson.loads(request.body)
-        user = User.objects.create_user(username = jdata["regno"],password = jdata["password"],email=jdata["email"])
-        user.save()
-        profile=Profile.objects.get(user=user)
-        profile.name=jdata["name"]
-        profile.phone=jdata["phone"]
-        profile.save()
-        return HttpResponse(status=200)
+        u = UserSerializer(data=jdata)
+        if(u.is_valid(raise_exception=True)):
+            u.validated_data['password']= make_password(u.validated_data['password'])
+            u.save()
+            return HttpResponse(status=201)
     except Exception:
-        traceback.print_exc()
-        return HttpResponse(status=500)
-    
+        return HttpResponse(ujson.dumps({'detail':'Internal error','code':'500'}),status=500)
 
 
 @api_view(['GET'])
@@ -43,7 +57,7 @@ def EventDetails(request, pk):
     try:
         event = Event.objects.get(pk=pk)
     except Event.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponse(ujson.dumps({'detail':'Event not found','code':'404'}),status=404)
 
     if request.method == 'GET':
         serializer = EventCompSerializer(event)

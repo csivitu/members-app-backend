@@ -1,14 +1,14 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+#from django.db.models.signals import post_save
+#from django.dispatch import receiver
+from django.contrib.auth.models import AbstractUser
 
 
 class Event(models.Model):
 	name = models.CharField(max_length=200)
 	desc = models.TextField()
-	images=models.TextField()
+	images = models.ImageField(upload_to = 'images/', default = 'images/no-img.jpg')
 	cat=models.CharField(max_length=50)
 	venue=models.CharField(max_length=50)
 	date = models.DateTimeField(default=timezone.now)
@@ -18,21 +18,20 @@ class Event(models.Model):
 	def __str__(self):
 		return self.name
 
-class Profile(models.Model):
-	user = models.OneToOneField(User, related_name='user')
-	name=models.CharField(max_length=50,blank=True)
-	phone = models.CharField(max_length=12,blank=True)
-	mem_type=models.CharField(max_length=12,blank=True)
-	
-	def __str__(self):
-		return self.name
+class User(AbstractUser):
+	CHOICES = ((0, "UNPAID"),(1,"PAID"),(2,"CREDIT"))
+	name=models.CharField(max_length=50)
+	phone = models.CharField(max_length=12)
+	mem_type=models.IntegerField(choices=CHOICES,default=0)
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        profile=Profile(user=instance)
-        profile.save()
-	
+
+
+'''
+@receiver(post_save, sender=Event)
+def send_notification(sender, instance, created, **kwargs):
+
+<FIREBASE INTEGRATION>
+'''	
 
 
 # Create your models here.

@@ -3,5 +3,5 @@ from apiserv.models import *
 # Register your models here.
 
 admin.site.register(Event)
-admin.site.register(Profile)
+admin.site.register(User)
 
