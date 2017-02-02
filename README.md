@@ -5,7 +5,7 @@ Install PostgreSQL
 
 Create a user,database
 
-Install PIL for certificate generation
+Install Pillow for certificate generation
 
 Install modules from requirement.txt
 
