@@ -14,3 +14,10 @@ Rename settings_dummy.py to settings.py
 Add secret key
 
 Update database details
+
+Migrate
+
+## Documentation
+
+Documentation can be found at
+http://docs.csimem.apiary.io
