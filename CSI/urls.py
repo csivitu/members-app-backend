@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'', include('apiserv.url')),
+    url(r'^api/', include('apiserv.urls')),
 ]
 
 # Remove in production
