@@ -57,7 +57,7 @@ This API returns both, machine-readable error codes and human-readable error mes
     "status" :{
                 "success":"false",
                 "code":400,
-                "error":"User already exists"}
+                "message":"User already exists"}
     
 }
 ```
@@ -164,7 +164,8 @@ Creates a new user account.
             + success: `true` (string) - Status message
             + code: 201 (number) - Status Code
             + message: `User registered successfully` (string) - Message
-
+        + token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....` (string) - New JWT
+        
 ## User password [/users/password]
 
 ### Change a password of the current user [PUT]
@@ -281,7 +282,7 @@ Returns the profile of the logged in user.
 + name: `Codespace` (string) - Name of the event.
 + venue: `CS HALL` (string) - Venue.
 + cat: `Hackathon` (string) - Categories
-+ time: `5:00-8:00` (string) - Event time
++ short_desc: `Blah BLah Blah Blah` (string) - Short description of the event
 
 ## Event2 (object)
 
@@ -290,7 +291,7 @@ Returns the profile of the logged in user.
 + name: `Python Workshop` (string) - Name of the event.
 + venue: `SJT 319` (string) - Venue.
 + cat: `Workshop` (string) - Categories
-+ time: `5:00-8:00` (string) - Event time
++ short_desc: `Blah BLah Blah Blah` (string) - Short description of the event
 
 ## Eventcomplete (object)
 
