@@ -54,8 +54,10 @@ This API returns both, machine-readable error codes and human-readable error mes
 
 ```js
 {
-    "code" : "404",
-    "detail": "Event not found",
+    "status" :{
+                "success":"false",
+                "code":400,
+                "error":"User already exists"}
     
 }
 ```
@@ -86,13 +88,23 @@ Use registeration number as username
 
 + Response 200 (application/json)
     + Attributes
-        + token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....` (string) - JSON Web Token.
-
+        + status (object)
+            + success: `true` (string) - Status message
+            + code: 201 (number) - Status Code
+            + message: `Login success` (string) - Message
+        + token: `dsfdsfdsfdsfdsfdsfdsfdsfdsf` (string)
+        
++ Response 401 (application/json)
+    + Attributes
+        + status (object)
+            + success: `false` (string) - Status message
+            + code: 401 (number) - Status Code
+            + message: `Incorrect username or password` (string) - Message
+        
 ## Refresh a token [POST /auth/refresh-token]
 
 Allows to retrieve a new, valid JSON Web Token based on a valid JSON Web Token.
 Expiry time is currently 15 days.
-Expired tokens MUST NOT be refreshed.
 
 **Endpoint information**
 
@@ -108,7 +120,10 @@ Expired tokens MUST NOT be refreshed.
 + Response 200 (application/json)
     + Attributes
         + token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....` (string) - New JWT
-
+        + staus (object)
+            + success: `true` (string) - Status message
+            + code: 201 (number) - Status Code
+            + message: `Token refreshed` (string) - Message
 ## User registration [/auth/register]
 
 ### Register a new user [POST]
@@ -117,14 +132,21 @@ Creates a new user account.
 
 + Provided email address MUST be unique.
 + Passwords MUST have at least six characters.
-+ Passwords MUST NOT contain the user name or parts of the user’s full name, such as his first name.
-
++ Member Type is required (given in table below)
++ If member type is Paid or 2 Credit Course member a 8 digit key is also required to sign up
 
 **Endpoint information**
 
 |                         |     |
 |-------------------------|-----|
 | Requires authentication | No  |
+
+
+| Member Type |Code |
+|-------------|-----|
+| Unpaid      | 0   |
+| Paid        | 1   |
+| 2 Credit    | 2   |
 
 + Request (application/json)
     + Attributes
@@ -133,9 +155,15 @@ Creates a new user account.
         + username: `16BCE0000` (string,required) - Registeration Number
         + phone: `9090909090` (string,required) - Mobile Number
         + name: 'VIT VIT' (string,required) - Full Name
-        + key: 'dsfdsfn3' (string,required) - In case of Paid member a key is required to register
+        + mem_type:0 (number,required) - Memeber type
+        + key: 'dsfdsfn3' (string) - In case of Paid member a key is required to register
 
-+ Response 201
++ Response 201 (application/json)
+    + Attributes
+        + status (object)
+            + success: `true` (string) - Status message
+            + code: 201 (number) - Status Code
+            + message: `User registered successfully` (string) - Message
 
 ## User password [/users/password]
 
@@ -160,10 +188,13 @@ After password is changed all access tokens issued for this user prior to passwo
         + old_password: `secret` (string, required)
         + new_password: `$3C6e7` (string, required)
 
-+ Response 200
++ Response 200 (application/json)
     + Attributes
         + token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` (string) - New JSON Web Token.
-
+        + status (object)
+            + success: `true` (string) - Status message
+            + code: 200 (number) - Status Code
+            + message: `Password Changed successfully` (string) - Message
 ## Events [/events]
 
 ### List all events [GET]
@@ -180,12 +211,17 @@ Returns a list of events. The events are returned in sorter order, with the most
             +Authorization: JWT 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' (string,required)
 
 + Response 200 (application/json)
-    + Attributes (array[Event,Event2])
+    + Attributes
+        + status (object)
+            + success: `true` (string) - Status message
+            + code: 200 (number) - Status Code
+            + message: `Fetched Events` (string) - Message
+        + Event (array[Event,Event2])
 
 ## Event [/events/{id}]
 
 + Parameters
-    + id: `a6vhAo3FG7t1` (string) - id of the user.
+    + id: 1 (number) - id of the event.
 
 ### Retrieve details about an event [GET]
 
@@ -203,8 +239,10 @@ Retrieves the details of an event.
 
 + Response 200 (application/json)
     + Attributes (Eventcomplete)
-
-+ Response 404
+        + status (object)
+            + success: `true` (string) - Status message
+            + code: 200 (number) - Status Code
+            + message: `Fetched Event` (string) - Message    
 
 ## User [/user]
 
@@ -223,36 +261,45 @@ Returns the profile of the logged in user.
 
 + Response 200 (application/json)
     + Attributes (DummyUser)
+        + status (object)
+            + success: `true` (string) - Status message
+            + code: 200 (number) - Status Code
+            + message: `Query Completed` (string) - Message     
 
 # Data Structures
 ## DummyUser (object)
 + name: `VIT VIT` (string) - Full name of the user.
 + username: `16BCE000` (string) - Registeration number.
 + phone: `9090909090` (string) - Mobile Number
-+ mem_type: `Paid` (string) -Paid/Unpaid/Credit
++ mem_type: 0 (number) -Paid/Unpaid/Credit
 + email: `1@a.com` (string) -Email
 
 ## Event (object)
 
-+ id: `a6vhAo3FG7t1` (string, fixed) - Short non-sequential url-friendly unique id.
++ id: 1 (number, fixed) - unique id.
 + date: `2016-07-01T15:11:09.553Z` (string) - ISO Date/time string. When this resource was created.
 + name: `Codespace` (string) - Name of the event.
 + venue: `CS HALL` (string) - Venue.
 + cat: `Hackathon` (string) - Categories
++ time: `5:00-8:00` (string) - Event time
 
 ## Event2 (object)
 
-+ id: `a6vhAo3FG22` (string, fixed) - Short non-sequential url-friendly unique id.
++ id: 2 (number, fixed) - unique id.
 + date: `2017-08-02T15:11:09.553Z` (string) - ISO Date/time string. When this resource was created.
-+ name: `Python Workshop` (string) - First name of the user.
++ name: `Python Workshop` (string) - Name of the event.
 + venue: `SJT 319` (string) - Venue.
 + cat: `Workshop` (string) - Categories
++ time: `5:00-8:00` (string) - Event time
 
 ## Eventcomplete (object)
 
-+ id: `a6vhAo3FG7t1` (string, fixed) - Short non-sequential url-friendly unique id.
++ id: 1 (number, fixed) - unique id.
 + date: `2016-07-01T15:11:09.553Z` (string) - ISO Date/time string. When this resource was created.
-+ name: `Codespace` (string) - First name of the user.
++ name: `Codespace` (string) - Name of the event.
 + venue: `CS HALL` (string) - Venue.
-+ images: `URL of images comma seperated` (string) - Image
++ time: `5:00-8:00` (string) - Event time
++ cat: `Workshop` (string) - Categories
++ link: `http://facebook.com/csivit/` (string) - Link to be shared on social networks
++ images: `/images/5.jpg` (string) - Image location
 + desc: `ddsfdsnfjkdsnjkfnjdsnjfnjkdsnfjndsjnfjnsjd` (string) - Description
