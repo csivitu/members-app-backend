@@ -51,15 +51,18 @@ def event_req(request):
     if request.method == 'GET':
         events = Event.objects.all()
         serializer = EventSerializer(events, many=True)
-        return Response(serializer.data)
+        statusObj={"success":"True","message": "Events fetched", "code": "200"}
+        return Response({"status":statusObj,"Events":serializer.data},status=200)
 
 
 @api_view(['GET'])
 def user_details(request):
     if request.method == 'GET':
         u = User.objects.get(username=request.user)
-        serializer = UserDetailsSerializer(u)
-        return Response(serializer.data)
+        rObj = UserDetailsSerializer(u).data
+        statusObj={"status":{"success":"True","message": "User detail fetched", "code": "200"}}
+        rObj.update(statusObj)
+        return Response(rObj,status=200)
 
 
 @api_view(['POST'])
@@ -73,23 +76,22 @@ def register(request):
         if(u.is_valid(raise_exception=True)):
             if(jdata['mem_type']==1 or jdata['mem_type']==2):#Paid members
                 if(valid_paid_key(jdata)==False):#Key check
-                    return HttpResponse(json.dumps({"status":{"success":"false","message": "Invalid Key", "code": "401"}}),status=401)
+                    statusObj={"success":"False","message": "Invalid Key", "code": "401"}
+                    return HttpResponse(json.dumps({"status":statusObj}),status=401)
 
 
             u.validated_data['password']= make_password(u.validated_data['password'])
             registered_user=u.save()
             payload = jwt_payload_handler(registered_user)
             token = jwt_encode_handler(payload)
-
-            return HttpResponse(
-                json.dumps({"status":{"success":"true","code":201,"message":"Registered"},"token":token}),
-                status=201
-            )
+            statusObj={"success":"True","code":201,"message":"Registered"}
+            return HttpResponse(json.dumps({"status":statusObj,"token":token}),status=201)
 
     except Exception:
         traceback.print_exc()
+        statusObj={"success":"False","message": "Internal error", "code": "500"}
         return HttpResponse(
-            json.dumps({"status":{"success":"false","message": "Internal error", "code": "500"}}),
+            json.dumps({"status":statusObj},status=500),
             status=500
         )
 
@@ -99,11 +101,12 @@ def event_details(request, pk):
     try:
         event = Event.objects.get(pk=pk)
     except Event.DoesNotExist:
-        return HttpResponse(
-            json.dumps({"status":{"success":"false","message": "Event not found", "code": "404"}}),
-            status=404
-        )
+        statusObj={"success":"False","message": "Event not found", "code": "404"}
+        return HttpResponse(json.dumps({"status":statusObj}),status=404)
 
     if request.method == 'GET':
         serializer = EventCompSerializer(event)
-        return Response(serializer.data)
+        rObj=serializer.data
+        statusObj={"status":{"success":"True","message": "Event fetched", "code": "200"}}
+        rObj.update(statusObj)
+        return Response(rObj,status=200)
