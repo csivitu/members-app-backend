@@ -83,7 +83,7 @@ Use registeration number as username
 
 + Request (application/json)
     + Attributes
-        + username: `dummy@vitstudent.ac.in` (string, required) - User email address
+        + username: `16BCE0000` (string, required) - User registeration number
         + password: `QXR0mi38a2` (string, required) - User password
 
 + Response 200 (application/json)
@@ -130,7 +130,6 @@ Expiry time is currently 15 days.
 
 Creates a new user account.
 
-+ Provided email address MUST be unique.
 + Passwords MUST have at least six characters.
 + Member Type is required (given in table below)
 + If member type is Paid or 2 Credit Course member a 8 digit key is also required to sign up
@@ -217,7 +216,7 @@ Returns a list of events. The events are returned in sorter order, with the most
             + success: `true` (string) - Status message
             + code: 200 (number) - Status Code
             + message: `Fetched Events` (string) - Message
-        + Event (array[Event,Event2])
+        + Events (array[Event,Event2])
 
 ## Event [/events/{id}]
 
@@ -282,6 +281,7 @@ Returns the profile of the logged in user.
 + name: `Codespace` (string) - Name of the event.
 + venue: `CS HALL` (string) - Venue.
 + cat: `Hackathon` (string) - Categories
++ time: `2 AM` (string) - Time
 + short_desc: `Blah BLah Blah Blah` (string) - Short description of the event
 
 ## Event2 (object)
@@ -291,6 +291,7 @@ Returns the profile of the logged in user.
 + name: `Python Workshop` (string) - Name of the event.
 + venue: `SJT 319` (string) - Venue.
 + cat: `Workshop` (string) - Categories
++ time: `2 AM` (string) - Time
 + short_desc: `Blah BLah Blah Blah` (string) - Short description of the event
 
 ## Eventcomplete (object)
