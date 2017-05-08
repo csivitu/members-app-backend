@@ -1,8 +1,0 @@
-Django==1.10.5
-PyJWT==1.4.2
-djangorestframework==3.5.3
-djangorestframework-jwt==1.9.0
-psycopg2==2.6.2
-pycrypto==2.6.1
-ujson==1.35
-pyfcm==1.2.8
