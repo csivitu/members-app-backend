@@ -22,14 +22,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'dumbpass' #-----------REPLACE
+SECRET_KEY = '' #-----------REPLACE
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
-MEDIA_ROOT = BASE_DIR + '/images'
+MEDIA_ROOT ='/images'
 MEDIA_URL = '/images/'
 
 # Application definition
@@ -187,3 +187,4 @@ JWT_AUTH = {
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/static'

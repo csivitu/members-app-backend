@@ -6,3 +6,7 @@ psycopg2==2.6.2
 pycrypto==2.6.1
 ujson==1.35
 pyfcm==1.2.8
+channels==0.17.3
+Pillow==3.1.2
+gunicorn==19.7.1
+daphne==0.15.0

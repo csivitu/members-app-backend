@@ -10,7 +10,7 @@ class Event(models.Model):
     name = models.CharField(max_length=200)
     desc = models.TextField()
     images = models.ImageField(
-        upload_to='images/', default='images/no-img.jpg'
+        upload_to='/images/', default='images/no-img.jpg'
     )
     cat = models.CharField(max_length=50)
     venue = models.CharField(max_length=50)
@@ -35,11 +35,11 @@ class User(AbstractUser):
 
 '''
 Untested Code
-'''
+
 @receiver(post_save, sender=Event)
 def send_notification(sender, instance, created, **kwargs):
     push_service = FCMNotification(api_key=settings.FIREBASE_KEY)
     message_title = "Upcoming Event - CSI"
     message_body = instance.short_desc
     push_service.notify_topic_subscribers(topic_name="newevents", message_body=message_body,message_title=message_title)
-
+'''
