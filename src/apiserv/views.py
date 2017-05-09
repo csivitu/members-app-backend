@@ -88,7 +88,6 @@ def register(request):
             return HttpResponse(json.dumps({"status":statusObj,"token":token}),status=201)
 
     except Exception:
-        traceback.print_exc()
         statusObj={"success":"False","message": "Internal error", "code": "500"}
         return HttpResponse(
             json.dumps({"status":statusObj},status=500),

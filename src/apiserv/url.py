@@ -5,8 +5,7 @@ from apiserv.views import (
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 
 urlpatterns = [
-    # url('^api/auth/login$', authLogin),
-    url('^api/register$', register),
+    url('^api/auth/register$', register),
     url('^api/events$', event_req),
     url('^api/events/(?P<pk>[0-9]+)$', event_details),
     url('^api/user$', user_details),
